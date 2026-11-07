@@ -1,3 +1,4 @@
+
 """High-level observation report assembly."""
 
 from asterionix.astronomy.moon import Moon
@@ -49,3 +50,31 @@ def get_moon_events(ephemeris, observer, time, hours=24):
         start_time=time,
         hours=hours,
     )
+
+
+def get_planet_windows(
+    ephemeris,
+    observer,
+    time,
+    hours=24,
+    step_minutes=10,
+    minimum_altitude_deg=10.0,
+    maximum_sun_altitude_deg=-12.0,
+):
+    """Find geometric observation windows for all configured planets."""
+
+    results = {}
+
+    for name, body in ephemeris.bodies.items():
+        results[name] = find_observation_windows(
+            ephemeris=ephemeris,
+            observer=observer,
+            body=body,
+            start_time=time,
+            hours=hours,
+            step_minutes=step_minutes,
+            minimum_altitude_deg=minimum_altitude_deg,
+            maximum_sun_altitude_deg=maximum_sun_altitude_deg,
+        )
+
+    return results

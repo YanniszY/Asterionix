@@ -9,6 +9,7 @@ from asterionix.planner.observation import (
     build_report,
     get_moon_windows,
     get_moon_events,
+    get_planet_windows,
 )
 
 
@@ -91,6 +92,33 @@ def main():
         for window in windows:
             print(
                 f"  {_format_utc(window['start_utc'])} — "
+                f"{_format_utc(window['end_utc'])} | "
+                f"peak altitude {window['peak_altitude_deg']:.1f}°"
+            )
+    
+    
+    
+    
+    
+    print(f"\nPLANET OBSERVATION WINDOWS (next {args.hours} hours)")
+
+    planet_windows = get_planet_windows(
+        ephemeris,
+        observer,
+        time,
+        hours=args.hours,
+    )
+
+    for name, windows in planet_windows.items():
+        print(f"\n  {name}")
+
+        if not windows:
+            print("    No suitable intervals found.")
+            continue
+
+        for window in windows:
+            print(
+                f"    {_format_utc(window['start_utc'])} — "
                 f"{_format_utc(window['end_utc'])} | "
                 f"peak altitude {window['peak_altitude_deg']:.1f}°"
             )
